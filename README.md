@@ -4,13 +4,15 @@ React + Vite frontend with an Express authentication API.
 
 ## Real email verification
 
-Registration now creates a pending account on the server and sends a random 6-digit code to the submitted email. Codes expire after 10 minutes, are stored as SHA-256 hashes, and allow at most five incorrect attempts. A user is only saved as an active account after the correct code is submitted. Login checks the server's password hash and verified status. The old demo OTP and demo login accounts have been removed.
+Registration creates a pending account on the server and sends a random 6-digit code to the submitted email. Codes expire after 10 minutes, are stored as SHA-256 hashes, and allow at most five incorrect attempts. A user is only saved as an active account after the correct code is submitted. Login checks the server's password hash and verified status. The old demo OTP and demo login accounts have been removed.
 
 ## Requirements
 
 - Node.js 18 or newer
 - npm
-- A Gmail account with 2-Step Verification and a Google App Password, or another SMTP email provider
+- A Brevo account with transactional email enabled and a verified sender address
+
+Users registering with Uni-Reas do not need a Brevo account or 2-Step Verification. Brevo is only the service Uni-Reas uses to send the OTP emails.
 
 ## 1. Install frontend dependencies
 
@@ -20,7 +22,17 @@ From the project root:
 npm install
 ```
 
-## 2. Configure the backend
+## 2. Configure Brevo and the backend
+
+Create a Brevo account at https://www.brevo.com/ and complete its sender/transactional-email setup.
+
+In Brevo:
+1. Open **Senders, Domains & Dedicated IPs** and add a sender email address you control. Verify it using the code Brevo sends to that address. Use a domain you own and authenticate it with the DNS records Brevo provides when possible.
+2. Open **Settings → SMTP & API → SMTP**.
+3. Copy the SMTP **Login** shown there. It may be your Brevo login email or a generated SMTP login.
+4. Generate an **SMTP key** and copy it. Do not use an API key or your Brevo account password.
+
+Install backend dependencies:
 
 ```bash
 cd server
@@ -34,16 +46,19 @@ Copy-Item .env.example .env
 ```
 
 Open `server/.env` and set:
+
 - `JWT_SECRET`: a long random secret (at least 32 characters)
-- `SMTP_HOST=smtp.gmail.com`
+- `SMTP_HOST=smtp-relay.brevo.com`
 - `SMTP_PORT=587`
 - `SMTP_SECURE=false`
-- `SMTP_USER`: your sender Gmail address
-- `SMTP_PASS`: a Google App Password (not your normal Gmail password)
-- `MAIL_FROM`: your sender display name and email
+- `SMTP_USER`: the exact SMTP Login shown in Brevo's SMTP settings
+- `SMTP_PASS`: the Brevo SMTP key (not an API key)
+- `MAIL_FROM`: a sender address verified in your Brevo account, e.g. `"Uni-Reas <you@yourdomain.com>"`
 - `CLIENT_ORIGIN=http://localhost:5173`
 
-To create a Google App Password, enable 2-Step Verification in your Google Account, then open Google Account → Security → App passwords. Do not share the app password or commit the `.env` file to GitHub.
+Brevo's official SMTP instructions: https://help.brevo.com/hc/en-us/articles/7924908994450-Send-transactional-emails-using-Brevo-SMTP
+
+Do not share the SMTP key or commit the `.env` file to GitHub.
 
 Optional: set `ALLOWED_EMAIL_DOMAIN=your-university-domain.edu` to restrict registration to that exact email domain. Leave it empty to allow normal email addresses.
 
