@@ -41,17 +41,28 @@ export default function SignIn() {
 
       // Local demo authentication. Real authentication requires a configured backend.
       const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]')
-      const isDemoAccount = email.trim().toLowerCase() === 'demo@university.edu' && password === 'password123'
+      const normalizedEmail = email.trim().toLowerCase()
+      const isAdminDemo = normalizedEmail === 'admin@university.edu' && password === 'admin123'
+      const isDemoAccount = normalizedEmail === 'demo@university.edu' && password === 'password123'
       const registeredUser = users.find(user => user.email?.toLowerCase() === email.trim().toLowerCase())
 
-      if (!isDemoAccount && !registeredUser) {
+      if (!isDemoAccount && !isAdminDemo && !registeredUser) {
         throw new Error('Account not found. Please create an account first.')
       }
-      if (!isDemoAccount && registeredUser.password !== password) {
+      if (!isDemoAccount && !isAdminDemo && registeredUser.password !== password) {
         throw new Error('Incorrect email or password.')
       }
 
-      const mockUser = isDemoAccount
+      const mockUser = isAdminDemo
+        ? {
+            id: 'demo-admin',
+            name: 'Portal Administrator',
+            email: 'admin@university.edu',
+            role: 'admin',
+            department: 'Administration',
+            profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=PortalAdmin'
+          }
+        : isDemoAccount
         ? {
             id: 'demo-user',
             name: 'Demo User',
@@ -172,7 +183,7 @@ export default function SignIn() {
           {/* Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-xs text-blue-700 font-semibold mb-2">💡 Tip:</p>
-            <p className="text-xs text-blue-600">Enter any email address to sign in. Use any password with 6+ characters.</p>
+            <p className="text-xs text-blue-600">Student demo: demo@university.edu / password123. Admin demo: admin@university.edu / admin123.</p>
           </div>
         </div>
       </div>
