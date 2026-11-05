@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Mail, AlertCircle, CheckCircle } from 'lucide-react'
 
-export default function EmailVerificationModal({ email, onVerify }) {
+export default function EmailVerificationModal({ email, onVerify, onResend }) {
   const [code, setCode] = useState(['', '', '', '', '', ''])
   const [timer, setTimer] = useState(45)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [resending, setResending] = useState(false)
 
   useEffect(() => {
     if (timer > 0) {
@@ -94,7 +95,7 @@ export default function EmailVerificationModal({ email, onVerify }) {
             <p className="text-gray-600">
               Enter the 6-digit verification code for<br />
               <span className="font-semibold">{email}</span>
-              <span className="block mt-2 text-xs text-blue-700">Local demo code: 123456 (no email is sent)</span>
+
             </p>
           </div>
 
@@ -138,10 +139,16 @@ export default function EmailVerificationModal({ email, onVerify }) {
               ) : (
                 <button
                   type="button"
-                  onClick={() => setTimer(45)}
+                  onClick={async () => {
+                    setError(''); setResending(true)
+                    try { await onResend(); setTimer(45); setCode(['', '', '', '', '', '']) }
+                    catch (err) { setError(err.message || 'Could not resend code') }
+                    finally { setResending(false) }
+                  }}
+                  disabled={resending}
                   className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
                 >
-                  Resend Code
+                  {resending ? 'Sending...' : 'Resend Code'}
                 </button>
               )}
             </div>
