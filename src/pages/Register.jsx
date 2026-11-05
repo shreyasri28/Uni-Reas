@@ -91,7 +91,7 @@ export default function Register() {
       setIsAuthenticated(true)
       navigate('/dashboard')
     } catch (err) {
-      throw new Error('Verification failed')
+      throw err
     }
   }
 
