@@ -31,6 +31,14 @@ export const authService = {
       return data
     } catch (error) { throw new Error(error.response?.data?.message || 'Sign in failed.') }
   },
+  getMe: async () => {
+    try {
+      const token = localStorage.getItem('authToken')
+      const data = (await api.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } })).data
+      localStorage.setItem('currentUser', JSON.stringify(data.user))
+      return data.user
+    } catch (error) { throw new Error(error.response?.data?.message || 'Session expired.') }
+  },
   logout: () => {
     localStorage.removeItem('authToken')
     localStorage.removeItem('currentUser')
