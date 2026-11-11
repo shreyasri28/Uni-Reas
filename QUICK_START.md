@@ -1,188 +1,89 @@
-# ⚡ Quick Start Guide
+# Uni-Reas — Quick Start
 
-## 🚀 Running the Application
+## Requirements
+- Node.js 18 or newer
+- npm
+- SMTP credentials for the transactional email provider configured for the backend
 
-The development server is already running at:
-```
-http://localhost:5173/
-```
+## Install
 
-## 🔐 Demo Credentials
+From the repository root:
 
-```
-Email:    demo@university.edu
-Password: password123
-```
-
-## 📁 Project Folder Location
-
-```
-c:\Users\Shreya Sri\Desktop\Uni Reas
+```bash
+npm install
+cd server
+npm install
+cd ..
 ```
 
-## 🛠️ Essential Commands
+## Configure email and authentication
 
-### Start Development Server
+Create `server/.env` by copying `server/.env.example`.
+
+PowerShell:
+
+```powershell
+Copy-Item server/.env.example server/.env
+```
+
+Set a private JWT secret (at least 32 characters) and the SMTP host, port, username, password/key, and verified sender address. Set `CLIENT_ORIGIN=http://localhost:5173`.
+
+Never commit `server/.env`, publish SMTP credentials, or put backend secrets in Vite variables. See [README.md](./README.md) for the full email-provider setup and deployment notes.
+
+## Run locally
+
+Open two terminals in the repository root.
+
+Terminal 1 — backend:
+
+```bash
+npm run server
+```
+
+Terminal 2 — frontend:
+
 ```bash
 npm run dev
 ```
 
-### Build for Production
-```bash
-npm run build
-```
+Open http://localhost:5173. Check the backend at http://localhost:3000/api/health.
 
-### Preview Production Build
+## Verify registration
+
+1. Register with an email inbox you can access.
+2. Check that inbox for the six-digit verification code.
+3. Enter the code before it expires.
+4. Sign out and sign in again with the same verified account.
+
+There are no built-in demo credentials. Accounts are created through email verification.
+
+## Available screens
+
+| Screen | Route |
+|---|---|
+| Sign in | `/signin` |
+| Register | `/register` |
+| Dashboard | `/dashboard` |
+| Researcher directory | `/directory` |
+| User profile | `/profile/:userId` |
+| Projects | `/projects` |
+| Project workspace | `/projects/:projectId` |
+| Collaboration requests | `/requests` |
+| Notifications | `/notifications` |
+| Recommended matches | `/matches` |
+| Profile settings | `/settings` |
+| Admin panel (admin role only) | `/admin` |
+
+## Useful commands
+
 ```bash
+npm run dev
+npm run build
 npm run preview
+npm run server
+npm run server:start
 ```
 
-## 📖 Documentation
+## Important implementation note
 
-- **Full Setup Guide** → [README.md](./README.md)
-- **Project Overview** → [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md)
-- **API Integration** → [src/services/api.js](./src/services/api.js)
-- **Mock Data** → [src/services/mockData.js](./src/services/mockData.js)
-
-## 🎯 Pages Available
-
-| Page | Route | Features |
-|------|-------|----------|
-| Sign In | `/signin` | Email/password login |
-| Register | `/register` | User registration with role selection |
-| Dashboard | `/dashboard` | Main dashboard with stats and activities |
-| Directory | `/directory` | Search & discovery with filtering |
-| User Profile | `/profile/:userId` | View researcher profiles |
-| Project Hub | `/projects/:projectId` | Chat, files, and tasks |
-| Admin Panel | `/admin` | User & request management |
-
-## 🎨 Key Features
-
-✅ **Authentication** - Sign up and sign in with mock data  
-✅ **Dashboard** - Stats, activities, and quick actions  
-✅ **Search & Discovery** - Find researchers with filters  
-✅ **Collaboration** - Send requests and manage approvals  
-✅ **Project Hub** - Team communication and task management  
-✅ **Admin Panel** - Manage users and requests  
-✅ **Responsive Design** - Works on mobile, tablet, and desktop  
-✅ **Mock Data** - Full sample data for testing  
-
-## 🔧 Configuration
-
-Environment variables are in `.env` file (create from `.env.example`):
-
-```env
-REACT_APP_API_URL=http://localhost:3000/api
-REACT_APP_USE_MOCK_DATA=true
-```
-
-## 📦 Installed Packages
-
-- React 18.2.0
-- React Router 6.20.0
-- Tailwind CSS 3.3.0
-- Lucide React 0.294.0
-- Axios 1.6.0
-- Vite 5.0.0
-
-## 🌐 Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## 💡 Tips
-
-1. **Clear Cache** if components don't update: `Ctrl + Shift + R`
-2. **Check Console** for any errors: `F12` → Console tab
-3. **Mock Data** can be modified in `src/services/mockData.js`
-4. **API Endpoints** are configured in `src/services/api.js`
-5. **Styling** can be customized in `tailwind.config.js`
-
-## 🆘 Common Issues
-
-### Port 5173 Already in Use?
-```bash
-npm run dev -- --port 3000
-```
-
-### Modules Not Found?
-```bash
-npm install
-```
-
-### Build Errors?
-```bash
-rm -r node_modules
-npm install
-npm run build
-```
-
-## 📱 Testing Checklist
-
-- [ ] Sign in with demo credentials
-- [ ] View dashboard with stats
-- [ ] Search for researchers in directory
-- [ ] View user profiles
-- [ ] Send collaboration request
-- [ ] Check notifications
-- [ ] View project hub
-- [ ] Access admin panel
-- [ ] Test on mobile view (F12 → Toggle device toolbar)
-
-## 🚀 Next Steps
-
-1. **Connect Backend**: Update API endpoints in `src/services/api.js`
-2. **Customize Theme**: Modify `tailwind.config.js`
-3. **Add More Pages**: Create new files in `src/pages/`
-4. **Deploy**: Build and deploy `dist/` folder to hosting
-
-## 📞 File Locations
-
-```
-Project Root (c:\Users\Shreya Sri\Desktop\Uni Reas)
-│
-├── src/
-│   ├── pages/          ← Page components here
-│   ├── components/     ← Reusable components here
-│   ├── services/       ← API calls here
-│   ├── App.jsx         ← Routes configuration
-│   └── index.css       ← Global styles
-│
-├── package.json        ← Dependencies
-├── tailwind.config.js  ← Tailwind theme
-├── vite.config.js      ← Vite config
-└── index.html          ← HTML entry point
-```
-
-## 🎯 React Component Structure
-
-All components follow this pattern:
-
-```jsx
-import { useState } from 'react'
-import { Icon } from 'lucide-react'
-import Header from '../components/Header'
-
-export default function PageName() {
-  const [state, setState] = useState(null)
-
-  return (
-    <div>
-      <Header />
-      {/* Page content */}
-    </div>
-  )
-}
-```
-
-## 🌟 You're Ready!
-
-Everything is set up and ready to go. Open your browser and visit:
-
-```
-http://localhost:5173/
-```
-
-Enjoy building! 🎉
+Email registration, verification, sign-in, and session restoration use the Express API. Several research, collaboration, project, notification, and administration screens still contain mock/sample data or browser-local state and are not yet fully backed by server APIs. Do not treat those screens as production-ready workflows until their backend integration is completed and tested.
