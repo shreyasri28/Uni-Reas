@@ -3,7 +3,7 @@ import { Mail, AlertCircle, CheckCircle } from 'lucide-react'
 
 export default function EmailVerificationModal({ email, onVerify, onResend }) {
   const [code, setCode] = useState(['', '', '', '', '', ''])
-  const [timer, setTimer] = useState(45)
+  const [timer, setTimer] = useState(60)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -141,7 +141,7 @@ export default function EmailVerificationModal({ email, onVerify, onResend }) {
                   type="button"
                   onClick={async () => {
                     setError(''); setResending(true)
-                    try { await onResend(); setTimer(45); setCode(['', '', '', '', '', '']) }
+                    try { await onResend(); setTimer(60); setCode(['', '', '', '', '', '']) }
                     catch (err) { setError(err.message || 'Could not resend code') }
                     finally { setResending(false) }
                   }}
