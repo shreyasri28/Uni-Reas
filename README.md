@@ -10,6 +10,7 @@ Registration creates a pending account on the server and sends a random 6-digit 
 
 - Node.js 18 or newer
 - npm
+- MySQL Server 8.0 or newer
 - A Brevo account with transactional email enabled and a verified sender address
 
 Users registering with Uni-Reas do not need a Brevo account or 2-Step Verification. Brevo is only the service Uni-Reas uses to send the OTP emails.
@@ -39,7 +40,7 @@ cd server
 npm install
 ```
 
-Copy `.env.example` to `.env` in the `server` folder. On Windows PowerShell:
+Create the MySQL database and tables by opening MySQL Workbench (or the MySQL CLI) and running the complete script in `server/database/schema.sql`. This creates the `uni_reas` database, `users` and `pending_verifications` tables.\n\nCopy `.env.example` to `.env` in the `server` folder. On Windows PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
@@ -47,7 +48,7 @@ Copy-Item .env.example .env
 
 Open `server/.env` and set:
 
-- `JWT_SECRET`: a long random secret (at least 32 characters)
+- `JWT_SECRET`: a long random secret (at least 32 characters)\n- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`: your local MySQL connection details (normally `DB_NAME=uni_reas`)
 - `SMTP_HOST=smtp-relay.brevo.com`
 - `SMTP_PORT=587`
 - `SMTP_SECURE=false`
