@@ -46,7 +46,7 @@ const publicUser = row => ({
 })
 const authRequired = async (req, res, next) => {
   try {
-    const token = (req.headers.authorization || '').replace(/^Bearer\\s+/i, '')
+    const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '')
     const payload = jwt.verify(token, JWT_SECRET)
     const [rows] = await pool.execute('SELECT * FROM users WHERE id = ? AND verified = 1 LIMIT 1', [payload.sub])
     if (!rows.length) return res.status(401).json({ message: 'Please sign in again.' })
@@ -76,7 +76,7 @@ app.post('/api/auth/register', async (req, res) => {
     const department = String(req.body.department || '').trim()
 
     if (name.length < 2 || name.length > 100) return res.status(400).json({ message: 'Enter a valid full name.' })
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return res.status(400).json({ message: 'Enter a valid email address.' })
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ message: 'Enter a valid email address.' })
     const domain = String(process.env.ALLOWED_EMAIL_DOMAIN || '').trim().toLowerCase()
     if (domain && email.split('@')[1] !== domain) return res.status(400).json({ message: `Use your university email ending in @${domain}.` })
     if (password.length < 8 || password.length > 72) return res.status(400).json({ message: 'Password must be between 8 and 72 characters.' })
